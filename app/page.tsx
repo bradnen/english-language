@@ -42,7 +42,7 @@ export default function Home() {
         <div className="container max-w-3xl mx-auto px-4 py-6">
           <div className="flex items-center justify-between gap-4">
             <div>
-              <h1 className="text-4xl font-bold text-primary">English Dictionary</h1>
+              <h1 className="text-4xl font-bold text-primary">English Language</h1>
               <p className="text-muted-foreground text-sm mt-1">Explore words, meanings, and usage examples</p>
             </div>
             <Link
