@@ -6,6 +6,7 @@ import { Bookmark } from "lucide-react"
 import SearchBar from "@/components/search-bar"
 import WordCard from "@/components/word-card"
 import FeaturedWords from "@/components/featured-words"
+import Footer from "@/components/footer"
 
 export default function Home() {
   const [selectedWord, setSelectedWord] = useState<any>(null)
@@ -83,6 +84,9 @@ export default function Home() {
 
         {!selectedWord && !loading && !error && <FeaturedWords onSelectWord={handleSearch} />}
       </div>
+
+      {/* Footer */}
+      <Footer />
     </main>
   )
 }
