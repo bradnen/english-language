@@ -59,16 +59,33 @@ export default function AIHelpButton() {
 
       if (!response.ok) throw new Error("Failed to get response")
 
-      const data = await response.json()
+      const reader = response.body?.getReader()
+      const decoder = new TextDecoder()
 
-      const aiMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        text: data.response,
-        sender: "ai",
-        timestamp: new Date(),
+      if (!reader) throw new Error("No response body")
+
+      let fullText = ""
+      const aiMessageId = (Date.now() + 1).toString()
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: aiMessageId,
+          text: "",
+          sender: "ai",
+          timestamp: new Date(),
+        },
+      ])
+
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+
+        const chunk = decoder.decode(value)
+        fullText += chunk
+
+        setMessages((prev) => prev.map((msg) => (msg.id === aiMessageId ? { ...msg, text: fullText } : msg)))
       }
-
-      setMessages((prev) => [...prev, aiMessage])
     } catch (error) {
       console.error("Error:", error)
       const errorMessage: Message = {
@@ -125,11 +142,11 @@ export default function AIHelpButton() {
                 </div>
               </div>
             ))}
-            {loading && (
+            {loading && !messages[messages.length - 1]?.text && (
               <div className="flex justify-start">
                 <div className="bg-muted text-foreground px-4 py-2 rounded-lg flex items-center gap-2">
                   <Loader2 className="w-4 h-4 animate-spin" />
-                  <span className="text-sm">Thinking...</span>
+                  <span className="text-sm">Typing...</span>
                 </div>
               </div>
             )}

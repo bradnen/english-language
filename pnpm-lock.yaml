@@ -8,8 +8,11 @@ importers:
 
   .:
     dependencies:
-      '@ai-sdk/openai':
+      '@ai-sdk/groq':
         specifier: latest
+        version: 2.0.28(zod@3.25.76)
+      '@ai-sdk/openai':
+        specifier: 2.0.64
         version: 2.0.64(zod@3.25.76)
       '@hookform/resolvers':
         specifier: ^3.10.0
@@ -194,6 +197,12 @@ packages:
 
   '@ai-sdk/gateway@2.0.7':
     resolution: {integrity: sha512-/AI5AKi4vOK9SEb8Z1dfXkhsJ5NAfWsoJQc96B/mzn2KIrjw5occOjIwD06scuhV9xWlghCoXJT1sQD9QH/tyg==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      zod: ^3.25.76 || ^4.1.8
+
+  '@ai-sdk/groq@2.0.28':
+    resolution: {integrity: sha512-910ACt1kUA6+en9hjfhQFo+/yaUDe3xaAf7+l2N6jrfUNNciHe5DoW0GAJwGMnYK2li9CVcWNNXsmQ6TCzPnDA==}
     engines: {node: '>=18'}
     peerDependencies:
       zod: ^3.25.76 || ^4.1.8
@@ -1791,6 +1800,12 @@ snapshots:
       '@ai-sdk/provider': 2.0.0
       '@ai-sdk/provider-utils': 3.0.16(zod@3.25.76)
       '@vercel/oidc': 3.0.3
+      zod: 3.25.76
+
+  '@ai-sdk/groq@2.0.28(zod@3.25.76)':
+    dependencies:
+      '@ai-sdk/provider': 2.0.0
+      '@ai-sdk/provider-utils': 3.0.16(zod@3.25.76)
       zod: 3.25.76
 
   '@ai-sdk/openai@2.0.64(zod@3.25.76)':

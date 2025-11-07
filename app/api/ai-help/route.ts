@@ -1,5 +1,5 @@
-import { openai } from "@ai-sdk/openai"
-import { generateText } from "ai"
+import { streamText } from "ai"
+import { createGroq } from "@ai-sdk/groq"
 
 export async function POST(request: Request) {
   try {
@@ -9,16 +9,16 @@ export async function POST(request: Request) {
       return Response.json({ error: "Message is required" }, { status: 400 })
     }
 
-    const apiKey = process.env.OPENAI_API_KEY
-    console.log("[v0] API Key exists:", !!apiKey)
-    console.log("[v0] API Key starts with:", apiKey?.substring(0, 10) || "NOT SET")
+    console.log("[v0] Sending request to Groq AI model with message:", message.substring(0, 50))
 
-    if (!apiKey) {
-      return Response.json({ error: "API key not configured" }, { status: 500 })
-    }
+    const apiKey = "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"
 
-    const { text } = await generateText({
-      model: openai("gpt-4o-mini", { apiKey }),
+    const groq = createGroq({
+      apiKey: apiKey,
+    })
+
+    const { textStream } = await streamText({
+      model: groq("llama-3.3-70b-versatile"),
       system: `You are an expert English language tutor and writing assistant. Help users with:
 - Grammar corrections and explanations
 - Vocabulary and word usage
@@ -31,8 +31,26 @@ Be concise, friendly, and educational. When correcting, always explain why.`,
       prompt: message,
     })
 
-    return Response.json({ response: text })
+    // Convert textStream to a ReadableStream response
+    const encoder = new TextEncoder()
+    const customStream = new ReadableStream({
+      async start(controller) {
+        try {
+          for await (const chunk of textStream) {
+            controller.enqueue(encoder.encode(chunk))
+          }
+          controller.close()
+        } catch (error) {
+          controller.error(error)
+        }
+      },
+    })
+
+    return new Response(customStream, {
+      headers: { "Content-Type": "text/event-stream" },
+    })
   } catch (error) {
+    console.log("[v0] Error in AI help:", error instanceof Error ? error.message : String(error))
     console.error("AI Help Error:", error)
     return Response.json({ error: "Failed to process request" }, { status: 500 })
   }
