@@ -21,7 +21,8 @@ export default function Home() {
     try {
       const response = await fetch(`/api/dictionary?word=${encodeURIComponent(word)}`)
       if (!response.ok) {
-        setError("Word not found. Try another search.")
+        const errorData = await response.json().catch(() => ({}))
+        setError(errorData.error || "Word not found. Try another search or check your spelling.")
         setSelectedWord(null)
         return
       }
@@ -76,7 +77,7 @@ export default function Home() {
 
         {selectedWord && (
           <div>
-            <Link href={`/word/${selectedWord.word}`}>
+            <Link href={`/word/${selectedWord.word}`} className="block">
               <WordCard word={selectedWord} />
             </Link>
           </div>

@@ -78,14 +78,12 @@ export default function WordCard({ word }: WordCardProps) {
       {word.sourceUrls?.length > 0 && (
         <div className="mt-6 pt-6 border-t border-border">
           <p className="text-sm text-muted-foreground mb-2">Source</p>
-          <a
-            href={word.sourceUrls[0]}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-accent hover:underline text-sm break-all"
+          <button
+            onClick={() => window.open(word.sourceUrls[0], "_blank")}
+            className="text-accent hover:underline text-sm break-all text-left"
           >
             {word.sourceUrls[0]}
-          </a>
+          </button>
         </div>
       )}
     </div>
